@@ -1,33 +1,67 @@
-print
-print'--------------------------X-----------------------------'
-print
-while True:
-    while True:
-        print'-----------------X-----------------'
-        print'\t\tHANGMAN ULTIMATE\n\n\n\n\n\tMODES'
-        print'\n\n\t1. HANGMAN GAME (original)\n\t2. HANGMAN GAME (modified)\n\t3. EXIT'
-        xx=raw_input('\n\n (press corresponding serial number and press Enter to access) ')
-        print
-        if xx=='3':
-            print
-            print
-            print '\t\tQuiting the game.'
-            print
-            print'\t\t\t\tThank You!'
-            print
-            print'--------------------------X-----------------------------'
-            print
-            print
-            print'\t\t< By Tamojit Das >'
-            print
-            print
-            hj=raw_input('')
-            quit()
-        elif xx=='2':
-            print
-            import y
-            break
+from random import randint,choice
+
+def place(word,source,x):
+    word=list(word)
+    for a in range(len(source)):
+        if source[a]==x:
+            word[a]=x
+    z=''
+    for i in word:
+        z+=i
+    return z
+
+def form_object(x):
+    p=len(x)
+    a=[i for i in range(1,p,randint(2,p-1))]
+    z=''
+    dash=set()
+    for c in range(p):
+        if c in a:
+            z+='-'
+            dash.add(x[c])
         else:
-            print
-            import x
+            z+=x[c]
+    for a in dash:
+        z=z.replace(a,'-')
+    return (z,len(dash))
+    
+f=open('data.txt','r')
+word_list=f.read().split()
+f.close()
+
+
+subject=choice(word_list)
+obj=form_object(subject)
+turns=obj[1]
+score=0
+increment=100.0/turns
+
+obj=obj[0]
+
+a=1
+while a<turns+1:
+    print '='*50
+    print '\nTurn: ',a,'\tChances: ',turns,'\tScore: ',score
+    print '\n',obj,'\n'
+    b=raw_input('>>> ')
+    if b in subject:
+        print '\nOk, we place the letter.'
+        obj=place(obj,subject,b)
+        a+=1
+        score+=increment
+        if obj==subject:
+            print '\nThe Word is ',subject
             break
+
+    elif b in obj:
+        print '\nLetter is already there.'
+
+    else:
+        print '\nOops the letter is not in the word.'
+        a+=1
+    print '='*50
+else:
+    print'\nYou have lost all your chances.\nThe word was ',subject
+print '\nYour Score: ',score
+raw_input('Thank you.')
+
